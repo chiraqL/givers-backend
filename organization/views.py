@@ -7,6 +7,7 @@ from rest_framework import generics
 from customuser.models import User
 from events.models import Events
 
+from notifications.signals import notify #notifications 
 # Create your views here.
 @api_view(['POST'])
 def showrequest(request,E_id,V_id):
@@ -42,7 +43,6 @@ def show_all_requested(request,E_id):
     except requestevents.DoesNotExist:
          return Response(status=status.HTTP_400_BAD_REQUEST)
 
-from notifications.signals import notify
 
 
 @api_view(['GET', 'PUT'])
@@ -58,7 +58,6 @@ def update_request_api(request,E_id):
             return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-from notifications.signals import notify
 class UpdateRequestAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = requestevents.objects.all()
     serializer_class = approvalSerializer
