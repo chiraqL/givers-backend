@@ -28,16 +28,12 @@ class UserSerializer(serializers.ModelSerializer):
     isAdmin = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model=User
-        fields=['id','username','email']
+        fields=['id','name','email', 'isAdmin']
 
     def get_isAdmin(self,obj):
         return obj.is_staff
-
     def get_name(self,obj):
-        name=obj.first_name
-        if name=='':
-            name=obj.email
-        return name
+        return obj.full_name
 
 
 class UserSerializerWithToken(UserSerializer):
@@ -68,24 +64,6 @@ class ResetPasswordEmailRequestSerializer(serializers.Serializer):
     # redirect_url = serializers.CharField(max_length=500, required=False)
     class Meta:
         fields = ['email']
-'''
-    def validate(self,attrs):
-        email = attrs['data'].get('email','')
-        if User.objects.filter(email = email).exists():
-            user = User.objects.get(email = email)
-            uidb64 = urlsafe_base64_encode(user.id)
-            token = PasswordResetTokenGenerator().make_token(user)
-
-            subject = "Greetings from Givers!"
-            current_site = get_current_site(
-                request = attrs['data'].get('request')).domain
-            relativeLink = reverse('password_reset_confirm', kwargs={'uidb64':uidb64, 'token':token})
-            absurl = 'http://' + current_site + relativeLink 
-            email_body = 'Hi' + user.full_name+ 'Use this Link below to verify your email\n'
-            send_mail(subject,email_body,settings.EMAIL_HOST_USER, [user.email])
-
-        return super().validate(attrs)
-'''
 
 class SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(
