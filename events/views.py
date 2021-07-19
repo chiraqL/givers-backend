@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from customuser.models import User
 from events.models import EventCategory
+from notifications.signals import notify
 
 @api_view(['GET'])
 #@permission_classes([IsAuthenticated])
@@ -60,12 +61,16 @@ def registerEvent(request):
         Event.banner=request.FILES.get('banner')
         Event.save()
         serializer=EventSerializer(Event,many=False)
-        return Response(serializer.data)
-    except:
+        notify.send(sender = request.user,recipient=User.objects.all().filter(volunteer = True),verb='has created an event',level=0)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+    except Exception as e:
+        print(e)
         message={'detail':'Event with this content already exists'}
         return Response(message,status=status.HTTP_400_BAD_REQUEST)
 
 class EventUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset = Events.objects.all()
     serializer_class = EventupdateSerializer
+
+
 
