@@ -26,7 +26,14 @@ def approval(request,E_id,V_id):
         serializer=approvalSerializer(approval,data=request.data)
         if serializer.is_valid(): 
             serializer.save()
-            return Response (serializer.data)
+            if serializer.data['approved']== True:
+                notify.send(User.objects.get(id=E_id),recipient=User.objects.get(id=V_id),verb='approved your request for',level='info')
+                print("Your request has been approved")
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                print("Your request has been rejected")
+                notify.send(User.objects.get(id=V_id),recipient=User.objects.get(id=E_id),verb='rejected your request for',level='info')
+                return Response(serializer.data)
         else:
             return Response ({'status':'Failed'})
     except requestevents.DoesNotExist:
@@ -54,7 +61,7 @@ def update_request_api(request,E_id):
         user = serializer.data['user']
         if serializer.is_valid():
             serializer.save()
-            notify.send(request.user, recipient=user, verb='Your request has been approved.')
+            # notify.send(request.user, recipient=user, verb='Your request has been approved.')
             return Response(serializer.data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 

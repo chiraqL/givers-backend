@@ -69,9 +69,6 @@ class RegisterEventAPI(generics.CreateAPIView):
         notify.send(sender = self.request.user,recipient  =User.objects.filter(volunteer= self.request.user.volunteer) , verb = " There is an event created.")
         serializer.save(user=self.request.user)
 
-        # notify.send(self.request.user,recipient = self. ,verb='There is a new event .',level='info',target=serializer.save())
-        # serializer.save(user=self.request.user)
-        
 
 
 

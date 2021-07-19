@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from customuser.models import User
 from events.models import Events
 from rest_framework import generics
+from notifications.signals import notify
 # Create your views here.
 
 @api_view(['POST'])
