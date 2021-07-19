@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'category.apps.CategoryConfig',
     'miscellaneous.apps.MiscellaneousConfig',
     'notifications',
+    'following.apps.FollowingConfig',
     
 ]
 REST_FRAMEWORK = {
