@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_rest_passwordreset',
     'customuser.apps.CustomuserConfig',
     'events.apps.EventsConfig',
     'authentication.apps.AuthenticationConfig',
@@ -38,7 +37,12 @@ INSTALLED_APPS = [
     'volunteer.apps.VolunteerConfig',
     'organization.apps.OrganizationConfig',
     'corsheaders',
+    'validators.apps.ValidatorsConfig',
+    'django_rest_passwordreset',
+    'category.apps.CategoryConfig',
+    'miscellaneous.apps.MiscellaneousConfig',
     'notifications',
+    'following.apps.FollowingConfig',
     
 ]
 REST_FRAMEWORK = {
@@ -105,7 +109,7 @@ ROOT_URLCONF = 'givers.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

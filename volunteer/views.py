@@ -1,5 +1,5 @@
 
-from .models import requestevents
+from .models import interestedevents, requestevents
 from .serializers import interestedSerializervolunteer, requesteventSerializervolunteer
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -18,7 +18,6 @@ def requestevent(request):
             user=User.objects.get(username=data['username']),
             event=Events.objects.get(name=data['name']),
             description=data['description'],
-            interested=data['interested'],
             request_volunteer=data['request_volunteer'],
         )
         serializer=requesteventSerializervolunteer(requestevent,many=False)
@@ -58,29 +57,24 @@ def requestevent(request):
 @api_view(['GET'])
 def showinterested(request,V_id):
     try:
-        interested=requestevents.objects.filter(user_id=V_id ,interested=True)
+        interested=interestedevents.objects.filter(user_id=V_id ,interested=True)
         serializer=interestedSerializervolunteer(interested,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     except requestevents.DoesNotExist:
          return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class RequestEventAPI(generics.RetrieveUpdateDestroyAPIView):
-    queryset = requestevents.objects.all()
-    serializer_class = requesteventSerializervolunteer
 
-
-class ListEventAPI(generics.ListAPIView):
-    queryset = requestevents.objects.all()
-    serializer_class = requesteventSerializervolunteer
-    # this class performs the following functions:
-    # 1. Retrieve a list of all requestevents objects.
-    # 2. Show a list of all requestevents objects.
-
-class ListInterestAPI(generics.ListAPIView):
-    queryset = requestevents.objects.all()
-    serializer_class = interestedSerializervolunteer
-    # this class performs the following functions:
-    # 1. Retrieve a list of all requestevents objects.
-    # 2. Show a list of all requestevents objects.
-    
-
+@api_view(['POST'])
+def interestedevent(request):
+    data=request.data
+    try:
+        interested=interestedevents.objects.create(
+            user=User.objects.get(username=data['username']),
+            event=Events.objects.get(name=data['name']),
+            interested=data['interested'],
+        )
+        serializer=requesteventSerializervolunteer(interested,many=False)
+        return Response(serializer.data)
+    except:
+        message={'detail':'You are already interested in this Event'}
+        return Response(message,status=status.HTTP_400_BAD_REQUEST)
