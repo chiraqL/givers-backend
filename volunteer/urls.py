@@ -12,11 +12,3 @@ urlpatterns=[
     # path('api/request_event/<int:pk>/',views.RequestEventAPI.as_view(), name = 'request_event' ), 
     # path('api/request_event/',views.ListEventAPI.as_view(), name = 'request_event' ) 
 ]
-
-import notifications.urls
-
-urlpatterns += [
-   
-    url('inbox/notifications/', include(notifications.urls, namespace='notifications')),
-    
-]

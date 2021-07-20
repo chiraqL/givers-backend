@@ -3,7 +3,7 @@ from django.shortcuts import render,get_object_or_404
 from django.views import generic
 from rest_framework.views import APIView
 from .models import Events
-from .serializers import EventSerializer,EventupdateSerializer
+from .serializers import EventSerializer,EventupdateSerializer, NotificationSerializer
 from rest_framework import status ,generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -14,6 +14,8 @@ from rest_framework import generics
 from customuser.models import User
 from events.models import EventCategory
 from notifications.signals import notify
+from notifications.models import Notification
+
 
 @api_view(['GET'])
 #@permission_classes([IsAuthenticated])
@@ -76,5 +78,28 @@ def Event_display_completed(request,username):
     event = Events.objects.filter(user=user,completed=True)
     serializer=EventSerializer(event,many=True)
     return Response(serializer.data)
+
+class NotificationAPI(generics.GenericAPIView):
+    queryset =Notification.objects.all()
+    serializer_class = NotificationSerializer
+    permission_classes = (AllowAny,)
+    
+    def get( self, request, format=None ):
+        try:
+            notifications = Notification.objects.filter(recipient=request.user)
+            serializer = NotificationSerializer(notifications, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# @api_view(['GET'])
+# #@permission_classes([IsAuthenticated])
+#         user = User.objects.get(user = self.request.user)
+#         user.notifications.unread()
+#         serializer = NotificationSerializer(user.notifications.unread(), many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    
 
 

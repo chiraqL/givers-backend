@@ -10,5 +10,6 @@ urlpatterns=[
     path('api/events/register/',views.registerEvent,name='register_events'),
     path('api/events/update/<int:pk>/',views.EventUpdate.as_view(),name='update_events'),
 
+    path('api/events/notifications/', views.NotificationAPI.as_view(),name='notifications')
 
 ]

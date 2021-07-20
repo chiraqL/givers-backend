@@ -4,6 +4,7 @@ from rest_framework.fields import ReadOnlyField
 from .models import Events
 from customuser.models import User
 from category.serializers import EventCategorySerializer
+from notifications.models import Notification
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
@@ -19,4 +20,9 @@ class EventSerializer(serializers.ModelSerializer):
 class EventupdateSerializer(serializers.ModelSerializer):
     class Meta:
         model=Events
+        fields='__all__'
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Notification
         fields='__all__'
