@@ -9,9 +9,4 @@ urlpatterns=[
     path('api/events/history/<str:username>/',views.Event_display_completed,name='events_history'),
     path('api/events/register/',views.registerEvent,name='register_events'),
     path('api/events/update/<int:pk>/',views.EventUpdate.as_view(),name='update_events'),
-
-    path('api/events/notifications/read/', views.NotificationUnreadAPI.as_view(),name='notifications_unread'),
-    path('api/events/notifications/unread/', views.NotificationReadAPI.as_view(),name='notifications_read'),
-
-
 ]

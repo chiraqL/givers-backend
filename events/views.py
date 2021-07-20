@@ -3,7 +3,7 @@ from django.shortcuts import render,get_object_or_404
 from django.views import generic
 from rest_framework.views import APIView
 from .models import Events
-from .serializers import EventSerializer,EventupdateSerializer, NotificationSerializer
+from .serializers import EventSerializer,EventupdateSerializer
 from rest_framework import status ,generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -79,36 +79,7 @@ def Event_display_completed(request,username):
     serializer=EventSerializer(event,many=True)
     return Response(serializer.data)
 
-class NotificationUnreadAPI(generics.GenericAPIView):
-    queryset =Notification.objects.all()
-    serializer_class = NotificationSerializer
-    permission_classes = (AllowAny,)
-    
-    def get( self, request, format=None ):
-        try:
-            user = User.objects.get(id=request.user.id)
-            serializer = NotificationSerializer(user.notifications.unread(), many=True)
-            # notifications = Notification.objects.filter(recipient=request.user)
-            # serializer = NotificationSerializer(notifications, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            print(e)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class NotificationReadAPI(generics.GenericAPIView):
-    queryset =Notification.objects.all()
-    serializer_class = NotificationSerializer
-    permission_classes = (AllowAny,)
-    def get( self, request,format = None ):
-        try:
-            user = User.objects.get(id=request.user.id)
-            serializer = NotificationSerializer(user.notifications.read(), many=True)
-            # notifications = Notification.objects.filter(recipient=request.user)
-            # serializer = NotificationSerializer(notifications, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            print(e)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 

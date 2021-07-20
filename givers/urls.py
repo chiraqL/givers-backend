@@ -16,6 +16,7 @@ urlpatterns = [
     path('',include("validators.urls")),
     path('',include("category.urls")),
     path('',include("notifications.urls")),
+    path('',include("notification.urls")),
     path('',include("miscellaneous.urls")),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
