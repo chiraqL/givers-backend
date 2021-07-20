@@ -79,26 +79,39 @@ def Event_display_completed(request,username):
     serializer=EventSerializer(event,many=True)
     return Response(serializer.data)
 
-class NotificationAPI(generics.GenericAPIView):
+class NotificationUnreadAPI(generics.GenericAPIView):
     queryset =Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = (AllowAny,)
     
     def get( self, request, format=None ):
         try:
-            notifications = Notification.objects.filter(recipient=request.user)
-            serializer = NotificationSerializer(notifications, many=True)
+            user = User.objects.get(id=request.user.id)
+            serializer = NotificationSerializer(user.notifications.unread(), many=True)
+            # notifications = Notification.objects.filter(recipient=request.user)
+            # serializer = NotificationSerializer(notifications, many=True)
             return Response(serializer.data)
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['GET'])
-# #@permission_classes([IsAuthenticated])
-#         user = User.objects.get(user = self.request.user)
-#         user.notifications.unread()
-#         serializer = NotificationSerializer(user.notifications.unread(), many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
+class NotificationReadAPI(generics.GenericAPIView):
+    queryset =Notification.objects.all()
+    serializer_class = NotificationSerializer
+    permission_classes = (AllowAny,)
+    def get( self, request,format = None ):
+        try:
+            user = User.objects.get(id=request.user.id)
+            serializer = NotificationSerializer(user.notifications.read(), many=True)
+            # notifications = Notification.objects.filter(recipient=request.user)
+            # serializer = NotificationSerializer(notifications, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
     
 
