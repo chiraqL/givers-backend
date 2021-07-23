@@ -11,4 +11,5 @@ urlpatterns=[
     path('api/interested/<int:V_id>/',views.showinterested,name='interested'),
     # path('api/request_event/<int:pk>/',views.RequestEventAPI.as_view(), name = 'request_event' ), 
     # path('api/request_event/',views.ListEventAPI.as_view(), name = 'request_event' ) 
+    path('api/interested/update/<int:pk>/', views.UpdateInterestedAPI.as_view(), name = 'update_interested'),
 ]

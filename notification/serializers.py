@@ -4,4 +4,4 @@ from rest_framework import serializers
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model=Notification
-        fields='__all__'
+        fields=['id','actor_object_id','verb', 'description', 'recipient']

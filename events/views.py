@@ -44,6 +44,7 @@ from notifications.signals import notify
 def registerEvent(request):
     data=request.data
     print(data)
+    print(User.objects.get(username=data['username']))
     try:
         Event=Events.objects.create(
             user=User.objects.get(username=data['username']),
@@ -60,7 +61,7 @@ def registerEvent(request):
         Event.banner=request.FILES.get('banner')
         Event.save()
         serializer=EventSerializer(Event,many=False)
-        notify.send(sender = request.user,recipient=User.objects.all().filter(volunteer = True),verb='has created an event',level=0)
+        notify.send(sender = request.user,recipient=User.objects.all().filter(volunteer = True),verb='has created an event',level=0,target=Event)
         return Response(serializer.data,status=status.HTTP_201_CREATED)
     except Exception as e:
         print(e)

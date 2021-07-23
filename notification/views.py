@@ -25,6 +25,9 @@ class NotificationReadAPI(generics.GenericAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class NotificationUnreadAPI(generics.GenericAPIView):
+    '''
+    Notification Unread API
+    '''
     queryset =Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = (AllowAny,)

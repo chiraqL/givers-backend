@@ -36,7 +36,7 @@ def approval(request,E_id,V_id):
         else:
             return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     except requestevents.DoesNotExist:
-            return Response ({"Exeption":"Occured"},status=status.HTTP_400_BAD_REQUEST)
+            return Response ({"Exeption":"Does not exists"},status=status.HTTP_400_BAD_REQUEST)
 
 
 

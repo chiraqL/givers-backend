@@ -23,3 +23,6 @@ class interestedevents(models.Model):
     interested=models.BooleanField(default=False)
     def __str__(self):
         return f'{self.user}'
+
+    def get_interested(self):
+        return self.interested

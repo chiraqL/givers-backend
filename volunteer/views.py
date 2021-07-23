@@ -1,4 +1,5 @@
 
+from django.dispatch.dispatcher import receiver
 from .models import interestedevents, requestevents
 from .serializers import interestedSerializervolunteer, requesteventSerializervolunteer
 from rest_framework import status
@@ -74,7 +75,36 @@ def interestedevent(request):
             interested=data['interested'],
         )
         serializer=requesteventSerializervolunteer(interested,many=False)
-        return Response(serializer.data)
-    except:
+        # notify.send(sender= request.user , recipient  = User.objects.get(username=data['username']), verb = 'is interested in your event')
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
         message={'detail':'You are already interested in this Event'}
         return Response(message,status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateInterestedAPI(generics.RetrieveUpdateAPIView):
+    queryset = interestedevents.objects.all()
+    serializer_class = interestedSerializervolunteer
+
+    def put(self, request, pk, format=None):
+        try:
+            interested=self.get_object()
+            serializer=self.serializer_class(interested,data=request.data)
+            sender = User.objects.get(id  = interested.user_id)
+            event = Events.objects.get(id = interested.event_id)
+            receiver  = User.objects.get(id  = event.user_id)
+            if serializer.is_valid():
+                serializer.save()
+                if serializer.data['interested'] == True:
+                    notify.send(sender = sender,recipient=receiver,verb='has interested in your event')
+                    # notify.send(sender= User.objects.get(id  = interested.user , recipient  = User.objects.get(id=Events.objects.filter(id = serializer.data['event'])), verb = 'is interested in your event'))
+                else:
+                    notify.send(sender = sender,recipient=receiver,verb='has uninterested in your event')
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            message={'detail':'You are already interested in this Event'}
+            return Response(message,status=status.HTTP_400_BAD_REQUEST)
+
+        
