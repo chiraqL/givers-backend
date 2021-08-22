@@ -6,23 +6,20 @@
         {
             "label": "Make Migrations",
             "type": "shell",
-            "command": "python manage.py makemigrations",
+            "command": "python manage.py makemigrations"
         },
         {
             "label": "Migrate",
             "type": "shell",
             "command": "python manage.py migrate",
-            "dependsOn": [
-                "Make Migrations"
-            ]
+            "dependsOn": ["Make Migrations"]
         },
         {
             "label": "RunServer",
             "type": "shell",
             "command": "python manage.py runserver",
-            "dependsOn": [
-                "Migrate"
-            ]
+            "dependsOn": ["Migrate"],
+            "problemMatcher": []
         },
         {
             "label": "Deploy",
@@ -38,17 +35,13 @@
             "label": "Git Commit",
             "type": "shell",
             "command": "git commit",
-            "dependsOn": [
-                "Git Add"
-            ]
+            "dependsOn": ["Git Add"]
         },
         {
             "label": "Git Push",
             "type": "shell",
             "command": "git push",
-            "dependsOn": [
-                "Git Commit"
-            ]
-        },
+            "dependsOn": ["Git Commit"]
+        }
     ]
 }

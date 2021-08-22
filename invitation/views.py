@@ -16,6 +16,7 @@ from django.conf import settings
 @permission_classes([IsAuthenticated])
 def invite(request, U_id, E_id):
     data = request.data
+    print(data)
     try:
         invite = Invitation.objects.create(
             user=User.objects.get(id=U_id),

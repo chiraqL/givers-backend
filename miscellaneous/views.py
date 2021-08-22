@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from customuser.models import User
 from events.models import Events
 from volunteer.models import requestevents
-from rest_framework import  status
+from rest_framework import status
 from events.serializers import EventSerializer
 from customuser.serializers import UserSerializer
 from category.serializers import SkillSerializer
@@ -101,8 +101,27 @@ def search_by_skills(request, skill):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 class advance_search(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    filterset_fields = ['']  # add filter set here
+    filterset_fields = ['gender', 'province', 'district',
+                        'municipality', 'skills_1', 'skills_2', 'skills_3']  # add filter set here
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        queryset = User.objects.all()
+        gender = self.request.query_params.get('gender')
+        province = self.request.query_params.get('province')
+        district = self.request.query_params.get('district')
+        municipality = self.request.query_params.get('municipality')
+        skills_1 = self.request.query_params.get('skills_1')
+        skills_2 = self.request.query_params.get('skills_2')
+        skills_3 = self.request.query_params.get('skills_3')
+
+        queryset = queryset.filter(gender=gender, province=province, district=district,
+                                   municipality=municipality, skills_1=skills_1, skills_2=skills_2, skills_3=skills_3)
+        return queryset
